@@ -6,25 +6,29 @@ import (
 	"os/exec"
 	"path/filepath"
 	"time"
-)
 
-const (
-	defaultMemoDir = "/Users/obana.takenori/Work/myp/notebook/notebook/memo/work" // デフォルトのメモディレクトリのパスを指定
-	lifeMemoDir    = "/Users/obana.takenori/Work/myp/notebook/notebook/memo/life"    // -lifeオプションのメモディレクトリのパスを指定
+	"memo/config"
 )
 
 func main() {
+	// 設定ファイルを読み込む
+	config, err := config.LoadConfig("config.json")
+	if err != nil {
+		fmt.Println("Error loading config:", err)
+		return
+	}
+
 	var memoDir string
 	var filename string
 
 	// コマンドライン引数の解析
 	if len(os.Args) > 1 && os.Args[1] == "--life" {
-		memoDir = lifeMemoDir
+		memoDir = config.LifeMemoDir
 		if len(os.Args) > 2 {
 			filename = os.Args[2]
 		}
 	} else {
-		memoDir = defaultMemoDir
+		memoDir = config.DefaultMemoDir
 		if len(os.Args) > 1 {
 			filename = os.Args[1]
 		}
@@ -53,9 +57,8 @@ func main() {
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	err := cmd.Run()
+	err = cmd.Run()
 	if err != nil {
 		fmt.Println("Error opening file with vim:", err)
 	}
 }
-
