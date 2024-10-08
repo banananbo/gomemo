@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"memo/config"
+	"github.com/banananbo/gomemo/config"
 )
 
 func main() {
