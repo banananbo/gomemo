@@ -24,10 +24,9 @@ jobs:
         run: git checkout master
 
       - name: Merge main into master
-        run: git merge origin/main  --allow-unrelated-histories
+        run: git merge origin/main -X theirs --allow-unrelated-histories
 
       - name: Push changes to master
         run: git push origin master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-

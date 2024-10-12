@@ -10,6 +10,7 @@ import (
 type Config struct {
 	DefaultMemoDir string `json:"defaultMemoDir"`
 	LifeMemoDir    string `json:"lifeMemoDir"`
+	CategoriesDir  string `json:"CategoriesDir"`
 }
 
 //go:embed config.json
@@ -33,18 +34,3 @@ func main() {
 	fmt.Println("DefaultMemoDir:", config.DefaultMemoDir)
 	fmt.Println("LifeMemoDir:", config.LifeMemoDir)
 }
-
-// LoadConfig は指定されたファイルパスから設定を読み込む
-// func LoadConfig(filepath string) (*Config, error) {
-// 	file, err := os.Open(filepath)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	defer file.Close()
-
-// 	var config Config
-// 	if err := json.NewDecoder(file).Decode(&config); err != nil {
-// 		return nil, err
-// 	}
-// 	return &config, nil
-// }
