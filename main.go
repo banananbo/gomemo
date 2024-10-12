@@ -12,7 +12,7 @@ import (
 
 func main() {
 	// 設定ファイルを読み込む
-	config, err := config.LoadConfig("config.json")
+	config, err := config.LoadConfig()
 	if err != nil {
 		fmt.Println("Error loading config:", err)
 		return
