@@ -15,5 +15,5 @@ func (m DefaultMode) DetermineMemoLocation(config *config.Config, category *stri
 }
 
 func (m DefaultMode) CreateNewFile(memoPath string) error {
-	return createEmptyFile(memoPath)
+	return CreateNewFileWithDateTitle(memoPath)
 }

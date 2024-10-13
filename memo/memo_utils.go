@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"time"
 )
 
 func createFromTemplate(memoPath string, templatePath string) error {
@@ -37,6 +38,27 @@ func createEmptyFile(memoPath string) error {
 		return fmt.Errorf("ファイルの作成に失敗しました: %v", err)
 	}
 	defer file.Close()
+	return nil
+}
+
+func CreateNewFileWithDateTitle(memoPath string) error {
+	// 日付をマークダウンのタイトルとして追加
+	currentTime := time.Now()
+	title := fmt.Sprintf("# %s\n\n", currentTime.Format("2006-01-02"))
+
+	// ファイルを作成して日付を最初に書き込む
+	file, err := os.Create(memoPath)
+	if err != nil {
+		return fmt.Errorf("ファイルの作成に失敗しました: %v", err)
+	}
+	defer file.Close()
+
+	// 日付を書き込む
+	_, err = file.WriteString(title)
+	if err != nil {
+		return fmt.Errorf("ファイルへの書き込みに失敗しました: %v", err)
+	}
+
 	return nil
 }
 
