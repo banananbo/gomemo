@@ -13,6 +13,7 @@ type Config struct {
 	DefaultMemoDir string `json:"defaultMemoDir"`
 	LifeMemoDir    string `json:"lifeMemoDir"`
 	CategoriesDir  string `json:"CategoriesDir"`
+	CodesDir       string `json:"CodesDir"`
 }
 
 //go:embed config.json
@@ -27,6 +28,7 @@ func LoadConfig() (*Config, error) {
 	config.DefaultMemoDir = filepath.Join(config.RootDir, config.DefaultMemoDir)
 	config.LifeMemoDir = filepath.Join(config.RootDir, config.LifeMemoDir)
 	config.CategoriesDir = filepath.Join(config.RootDir, config.CategoriesDir)
+	config.CodesDir = filepath.Join(config.RootDir, config.CodesDir)
 	return &config, nil
 }
 

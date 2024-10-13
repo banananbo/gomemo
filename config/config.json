@@ -2,5 +2,6 @@
     "rootDir": "/Users/obana.takenori/memo",
     "defaultMemoDir": "/work",
     "lifeMemoDir": "/life",
-    "CategoriesDir": "/categories"
+    "CategoriesDir": "/categories",
+    "CodesDir": "/codes"
 }
