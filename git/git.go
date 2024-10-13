@@ -8,34 +8,16 @@ import (
 	"github.com/banananbo/gomemo/config"
 )
 
-// Function to add changes to the Git staging area
-func AddChanges(rootDir string) error {
-	addCmd := exec.Command("git", "add", ".")
-	addCmd.Dir = rootDir
-	addCmd.Stdout = os.Stdout
-	addCmd.Stderr = os.Stderr
-	return addCmd.Run()
+// ExecuteGitCommand runs a git command in the specified directory and handles standard output and errors
+func ExecuteGitCommand(rootDir string, args ...string) error {
+	cmd := exec.Command("git", args...)
+	cmd.Dir = rootDir
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
 }
 
-// Function to commit changes to the Git repository
-func CommitChanges(rootDir string, message string) error {
-	commitCmd := exec.Command("git", "commit", "-m", message)
-	commitCmd.Dir = rootDir
-	commitCmd.Stdout = os.Stdout
-	commitCmd.Stderr = os.Stderr
-	return commitCmd.Run()
-}
-
-// Function to push changes to the remote Git repository
-func PushChanges(rootDir string, branch string) error {
-	pushCmd := exec.Command("git", "push", "origin", branch)
-	pushCmd.Dir = rootDir
-	pushCmd.Stdout = os.Stdout
-	pushCmd.Stderr = os.Stderr
-	return pushCmd.Run()
-}
-
-// Function to handle memo pushing
+// PushMemo handles the complete process of pushing a memo
 func PushMemo(config *config.Config) {
 	fmt.Println("Pushing the memo...")
 
@@ -46,19 +28,19 @@ func PushMemo(config *config.Config) {
 	}
 
 	// Stage all changes
-	if err := AddChanges(config.RootDir); err != nil {
+	if err := ExecuteGitCommand(config.RootDir, "add", "."); err != nil {
 		fmt.Println("Error adding changes:", err)
 		return
 	}
 
 	// Commit the changes (optional)
-	if err := CommitChanges(config.RootDir, "Auto commit from memo app"); err != nil && err.Error() != "exit status 1" {
+	if err := ExecuteGitCommand(config.RootDir, "commit", "-m", "Auto commit from memo app"); err != nil && err.Error() != "exit status 1" {
 		fmt.Println("Error committing changes:", err)
 		return
 	}
 
 	// Push the changes to the remote repository
-	if err := PushChanges(config.RootDir, "main"); err != nil {
+	if err := ExecuteGitCommand(config.RootDir, "push", "origin", "main"); err != nil {
 		fmt.Println("Error pushing memo:", err)
 	}
 }
