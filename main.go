@@ -6,46 +6,45 @@ import (
 	"strings"
 
 	"github.com/banananbo/gomemo/config"
-	"github.com/banananbo/gomemo/git"
 	"github.com/banananbo/gomemo/memo"
 )
 
 func main() {
-	// Load the config file
+	// Configのロード
 	config, err := config.LoadConfig()
 	if err != nil {
-		fmt.Println("Error loading config:", err)
+		fmt.Println("Configのロードに失敗しました:", err)
 		return
 	}
 
+	// MemoContextを初期化
+	memoContext := memo.MemoContext{}
+
+	// モードに応じて戦略をセットし、メモを開く
 	if len(os.Args) < 2 {
-		// No arguments passed, create default memo
-		memo.CreateMemo(config, "", nil)
-		return
-	}
+		// 引数がなければデフォルトモード
+		memoContext.SetMode(memo.DefaultMode{})
+		memoContext.OpenMemo(config, nil)
+	} else {
+		command := os.Args[1]
+		switch {
+		case command == "life":
+			memoContext.SetMode(memo.LifeMode{})
+			memoContext.OpenMemo(config, nil)
 
-	command := os.Args[1]
-
-	switch command {
-	case "life":
-		// "life" mode
-		memo.CreateMemo(config, "life", nil)
-
-	case "push":
-		// Push the memo
-		git.PushMemo(config)
-
-	default:
-		// Handle "cat=xx" or "code=xx" commands
-		if strings.HasPrefix(command, "cat=") {
+		case strings.HasPrefix(command, "cat="):
 			category := strings.TrimPrefix(command, "cat=")
-			memo.CreateMemo(config, "cat", &category)
-		} else if strings.HasPrefix(command, "code=") {
+			memoContext.SetMode(memo.CatMode{})
+			memoContext.OpenMemo(config, &category)
+
+		case strings.HasPrefix(command, "code="):
 			category := strings.TrimPrefix(command, "code=")
-			memo.CreateMemo(config, "code", &category)
-		} else {
-			// Unknown command, create default memo
-			memo.CreateMemo(config, "", nil)
+			memoContext.SetMode(memo.CodeMode{})
+			memoContext.OpenMemo(config, &category)
+
+		default:
+			memoContext.SetMode(memo.DefaultMode{})
+			memoContext.OpenMemo(config, nil)
 		}
 	}
 }
