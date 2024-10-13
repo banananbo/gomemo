@@ -4,10 +4,12 @@ import (
 	_ "embed"
 	"encoding/json"
 	"fmt"
+	"path/filepath"
 )
 
 // Config 構造体は設定ファイルの内容を表す
 type Config struct {
+	RootDir        string `json:"rootDir"`
 	DefaultMemoDir string `json:"defaultMemoDir"`
 	LifeMemoDir    string `json:"lifeMemoDir"`
 	CategoriesDir  string `json:"CategoriesDir"`
@@ -21,6 +23,10 @@ func LoadConfig() (*Config, error) {
 	if err := json.Unmarshal(embeddedConfig, &config); err != nil {
 		return nil, err
 	}
+	// RootDir を含めてディレクトリのパスを更新
+	config.DefaultMemoDir = filepath.Join(config.RootDir, config.DefaultMemoDir)
+	config.LifeMemoDir = filepath.Join(config.RootDir, config.LifeMemoDir)
+	config.CategoriesDir = filepath.Join(config.RootDir, config.CategoriesDir)
 	return &config, nil
 }
 
